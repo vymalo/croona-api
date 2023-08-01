@@ -1,73 +1,29 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Project Documentation
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Overview
+This project is a NestJS server that provides a flexible and configurable interface to a MongoDB database. The interface is defined by YAML configuration files, which can be changed and expanded to suit the needs of the application. In addition to the main server, there is a separate command-line interface (CLI) tool that manages and applies database migrations.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Main Application
+The main application is a NestJS server responsible for serving requests to clients. It interprets the YAML configuration files at startup to generate Mongoose schemas, which serve as the database interface. When a client makes a request, the server uses this database interface to interact with the database.
+More [here](./docs/Server.md).
 
-## Description
+## Migration CLI Tool
+The CLI tool is responsible for managing and applying database migrations. It works by detecting changes between different versions of the YAML configuration files and applying the necessary transformations to the database. This tool ensures that the database state matches the current YAML configuration.
+More [here](./docs/CLITool.md).
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Schema Versioning
+To track the current state of the database, a "schema version" field is maintained in the database. This field reflects the version of the YAML configuration that the database currently aligns with. The CLI tool updates this field whenever it applies a migration, and the server reads this field at startup to determine how to interpret the YAML files and generate the database interface.
+More [here](./docs/Schema.md).
 
-## Installation
+## Security Considerations
+This system is designed for use by developers and includes minimal security measures. It is recommended to use it in conjunction with an external authentication and authorization server for production environments.
 
-```bash
-$ pnpm install
-```
+## Future Developments
+Plans for future development include enhancing security measures and adding support for more complex database operations.
 
-## Running the app
+## Getting Started
+To get started with this project, follow these steps...
+- install pnpm
+- ...
 
-```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
-```
-
-## Test
-
-```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+And so on. Please expand on this as necessary, and be sure to include detailed instructions for setting up the project and using the server and CLI tool.
