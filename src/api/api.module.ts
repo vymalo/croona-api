@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { ApiController } from './api.controller';
 import { CollectionService } from './collection/collection.service';
 import { CqrsModule } from '@nestjs/cqrs';
-import { ApiSagaService } from './handlers/api-saga.service';
-import { ApiGetOneQueryService } from './handlers/api-get-one.query.service';
+import { SagaService } from './handlers/saga.service';
+import { GetOneQueryService } from './handlers/get-one.query.service';
 import { DatabaseModule } from '../database/database.module';
 import { PublishItemCommandService } from './handlers/publish-item.command.service';
 import { UpdateItemCommandService } from './handlers/update-item.command.service';
@@ -14,8 +14,8 @@ import { SdkModule } from '../sdk/sdk.module';
   controllers: [ApiController],
   providers: [
     CollectionService,
-    ApiSagaService,
-    ApiGetOneQueryService,
+    SagaService,
+    GetOneQueryService,
     PublishItemCommandService,
     UpdateItemCommandService,
   ],

@@ -20,21 +20,20 @@ export class UpdateItemCommandService<T = any>
     const collection = this.mg.connection.collection(command.collection);
 
     try {
-      let insertedId = !!command.id
-        ? (
-            await collection.replaceOne(
-              { _id: new mongoose.Types.ObjectId(command.id) },
-              command.item,
-            )
-          ).upsertedId
-        : (await collection.insertOne(command.item)).insertedId;
+      const result = !!command.id
+        ? await collection.replaceOne(
+            { _id: new mongoose.Types.ObjectId(command.id) },
+            command.item,
+            { upsert: true },
+          )
+        : await collection.insertOne(command.item);
 
-      console.log('insertedId ?? command.id', insertedId ?? command.id);
-
-      insertedId =
-        insertedId ?? command.id
-          ? new mongoose.Types.ObjectId(command.id)
-          : insertedId;
+      let insertedId: mongoose.Types.ObjectId;
+      if ('insertedId' in result) {
+        insertedId = result.insertedId;
+      } else {
+        insertedId = new mongoose.Types.ObjectId(command.id);
+      }
 
       const { _id, ...item } = await collection.findOne({
         _id: insertedId,
