@@ -28,3 +28,20 @@ services:
     ports:
       - "1883:1883"
       - "8000:8000"
+
+  redis:
+    image: bitnami/redis
+    restart: always
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    ports:
+      - "6379:6379"
+
+  rebow:
+    image: marian/rebrow
+    restart: always
+    ports:
+      - "5001:5001"
+    depends_on:
+      - redis
