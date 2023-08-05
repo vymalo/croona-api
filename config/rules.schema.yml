@@ -1,0 +1,19 @@
+# TODO Document this file
+# TODO Add more examples
+# https://www.npmjs.com/package/path-to-regexp
+rules:
+  - path: "/users/:user_id"
+    conditions:
+      read: "true"
+      write: "(auth != null && auth.uid == user_id) || auth.isAdmin"
+      delete: "auth.isAdmin"
+
+  - path: "/users(.*)"
+    conditions:
+      read: "true"
+      write: "auth == null || auth.isAdmin"
+
+  - path: "/blogs(.*)"
+    conditions:
+      read: "true"
+      write: "auth != null && auth.isAdmin"

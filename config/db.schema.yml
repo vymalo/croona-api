@@ -1,0 +1,27 @@
+schemas:
+  - name: blogs
+    schema:
+      title: String
+      author: String
+      body: String
+      comments:
+        - body: String
+          date: Date
+      date:
+        type: Date
+        default: Date.now
+      hidden: Boolean
+      meta:
+        votes: Number
+        favs: Number
+  - name: users
+    schema:
+      name:
+        first: String
+        last: String
+      created_at:
+        type: Date
+        default: Date.now
+      updated_at:
+        type: Date
+        default: Date.now

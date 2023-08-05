@@ -7,11 +7,15 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { CollectionService } from './collection/collection.service';
 import { ApiBody, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CacheKey } from '@nestjs/cache-manager';
+import * as qs from 'qs';
+import { JwtGuard } from '../auth/jwt-guard/jwt.guard';
 
+// @UseGuards(JwtGuard)
 @ApiTags('api')
 @Controller('api/:collection')
 export class ApiController {
@@ -51,22 +55,21 @@ export class ApiController {
   @CacheKey(':collection/:id')
   @ApiOperation({ summary: 'Get an item', operationId: 'getOne' })
   @Get(':id')
-  public async getOne(
+  public async get(
     @Param('collection') collection: string,
     @Param('id') id: string,
   ) {
-    const items = await this.collectionService.findItems(collection, [id]);
+    const items = await this.collectionService.findItems(collection, {
+      _id: { $eq: id },
+    });
     return items[0];
   }
 
   @ApiQuery({
-    name: 'ids',
+    name: 'query',
     required: false,
     schema: {
-      type: 'array',
-      items: {
-        type: 'string',
-      },
+      additionalProperties: true,
     },
   })
   @CacheKey('collection')
@@ -74,11 +77,11 @@ export class ApiController {
   @Get()
   public async getItems(
     @Param('collection') collection: string,
-    @Query('ids') ids: string[] | string,
+    @Query('query') query: any,
   ) {
     return await this.collectionService.findItems(
       collection,
-      Array.isArray(ids) ? ids : [ids],
+      query ? qs.parse(query) : undefined,
     );
   }
 
