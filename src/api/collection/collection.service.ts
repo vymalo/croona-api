@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { UpdateItemCommand } from '../models/update-item.command';
-import { GetItemQuery } from '../models/get-item.query';
+import { FindItemsQuery } from '../models/find-items.query';
 import { DeleteItemCommand } from '../models/delete-item.command';
+import { ParsedQs } from 'qs';
 
 @Injectable()
 export class CollectionService {
@@ -28,11 +29,11 @@ export class CollectionService {
     return this.commandBus.execute(new UpdateItemCommand(collection, id, body));
   }
 
-  public async get(
+  public async findItems(
     collection: string,
-    id: string,
-  ): Promise<Record<string, any>> {
-    return this.queryBus.execute(new GetItemQuery(collection, id));
+    query?: ParsedQs,
+  ): Promise<Record<string, any>[]> {
+    return this.queryBus.execute(new FindItemsQuery(collection, query));
   }
 
   public async deleteOne(collection: string, id: string): Promise<void> {

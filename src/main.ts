@@ -1,11 +1,26 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as fse from 'fs-extra';
+import * as process from 'process';
+import * as path from 'path';
 
 async function bootstrap(port = process.env.PORT ?? 3000) {
-  const app = await NestFactory.create(AppModule);
+  const keyPath = path.join(process.cwd(), 'HostPrivateKey.pem');
+  const existKey = await fse.exists(keyPath);
+  const httpsOptions = existKey
+    ? {
+        key: fse.readFileSync(keyPath),
+        cert: fse.readFileSync(path.join(process.cwd(), 'HostCertificate.pem')),
+      }
+    : undefined;
+
+  const app = await NestFactory.create(AppModule, {
+    httpsOptions,
+  });
   app.enableCors();
+  app.useGlobalPipes(new ValidationPipe());
 
   const config = new DocumentBuilder()
     .setTitle('Croona API')
@@ -15,10 +30,11 @@ async function bootstrap(port = process.env.PORT ?? 3000) {
   SwaggerModule.setup('openapi', app, document);
 
   await app.listen(port);
-  Logger.log(`Server running on     http://localhost:${port}`, 'Main');
-  Logger.log(`OpenAPI running on    http://localhost:${port}/openapi`, 'Main');
-  Logger.log(`Health on             http://localhost:${port}/health`, 'Main');
-  Logger.log(`Metrics available at  http://localhost:${port}/metrics`, 'Main');
+  const protocol = existKey ? 'https' : 'http';
+  Logger.log(`Server    ${protocol}://localhost:${port}`, 'Main');
+  Logger.log(`OpenAPI   ${protocol}://localhost:${port}/openapi`, 'Main');
+  Logger.log(`Health    ${protocol}://localhost:${port}/health`, 'Main');
+  Logger.log(`Metrics   ${protocol}://localhost:${port}/metrics`, 'Main');
 }
 
 bootstrap();
